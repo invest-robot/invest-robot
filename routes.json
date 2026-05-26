@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/app/app_4k7behy8pcr1q/"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/quick-start"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/agents"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/dev-guide"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/cases"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/company-cases"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/company-cases/:caseId"
+  },
+  {
+    "path": "/app/app_4k7behy8pcr1q/admin"
+  }
+]
