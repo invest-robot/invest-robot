@@ -9,7 +9,7 @@
     }catch(e){return true}
   })();
   if(needsPolyfill){
-    document.write('<script src="/polyfills.js"><\/script>');
+    document.write('<script src="polyfills.js"><\/script>');
   }
 })();</script><script>(function() {
   var isModernBrowser = (function() {
@@ -31,15 +31,15 @@
     var finalUrl = url.replace(/\.css$/, suffix + '.css');
     document.write('<link rel="stylesheet" href="' + finalUrl + '">');
   });
-})();</script><noscript><link rel="stylesheet" href="/assets/index-WJa3jxPk.css"></noscript><script>window.csrfToken = "{{csrfToken}}";
-        window.userId = "{{userId}}";
-        window.tenantId = "{{tenantId}}";
-        window.appId = "{{appId}}";
-        window.ENVIRONMENT = "{{environment}}";
+})();</script><noscript><link rel="stylesheet" href="assets/index-WJa3jxPk.css"></noscript><script>window.csrfToken = "";
+        window.userId = "";
+        window.tenantId = "";
+        window.appId = "";
+        window.ENVIRONMENT = "production";
         const appInfo = {
-          name: "{{appName}}",
-          avatar: "{{{appAvatar}}}",
-          description: "{{appDescription}}",
+          name: "AI一人公司创业工具",
+          avatar: "",
+          description: "AI辅助一人公司创业的技术支持与培训文档站",
         };
         if (appInfo.name) {
           window._appInfo = appInfo;
@@ -135,8 +135,8 @@
     };
 
     // Add script to page
-    document.head.appendChild(teaScript);</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="{{appAvatar}}"><title>{{appName}}</title><script>try {
-      window.__platform__ = JSON.parse('{{{__platform__}}}');
+    document.head.appendChild(teaScript);</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="favicon.svg"><title>AI一人公司创业工具</title><script>try {
+      window.__platform__ = JSON.parse('{}');
     } catch (e) {
       console.error('Failed to parse __platform__', e);
-    }</script><script type="module" crossorigin src="/assets/index-Fw5Ikcqg.js"></script><meta property="og:title" content="{{appName}}"><meta property="og:description" content="{{appDescription}}"><meta property="og:image" content="{{appAvatar}}"><meta property="og:url" content="{{currentUrl}}"><meta name="description" content="{{appDescription}}"></head><body><div id="root"></div></body></html>
+    }</script><script type="module" crossorigin src="assets/index-Fw5Ikcqg.js"></script><meta property="og:title" content="AI一人公司创业工具"><meta property="og:description" content="AI辅助一人公司创业的技术支持与培训文档站"><meta property="og:image" content="/favicon.svg"><meta property="og:url" content="https://invest-robot.github.io/invest-robot/"><meta name="description" content="AI辅助一人公司创业的技术支持与培训文档站"></head><body><div id="root"></div></body></html>
