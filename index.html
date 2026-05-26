@@ -63,8 +63,7 @@
     if(e.error!=null){
       var err=e.error;
       if(e.filename&&typeof err.stack==='string'&&err.stack.indexOf(e.filename)<0){
-        try{err.stack+='
-    at '+e.filename+':'+(e.lineno||0)+':'+(e.colno||0);}catch(ex){}
+        try{err.stack+='\n    at '+e.filename+':'+(e.lineno||0)+':'+(e.colno||0);}catch(ex){}
       }
       _cap(err);
     }else{
