@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 一人公司 - 技术支持与培训中心</title>
+  <style>
+    /* ========== 基础重置 ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft Yahei", sans-serif;
+      background: hsl(210 20% 98%);
+      color: hsl(210 10% 15%);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== 色彩变量 ========== */
+    :root {
+      --bg: hsl(210 20% 98%);
+      --card: hsl(0 0% 100%);
+      --text: hsl(210 10% 15%);
+      --text-muted: hsl(210 10% 50%);
+      --primary: hsl(211 90% 48%);
+      --primary-fg: hsl(0 0% 100%);
+      --accent: hsl(211 90% 96%);
+      --accent-fg: hsl(211 90% 48%);
+      --border: hsl(210 10% 90%);
+      --code-bg: hsl(210 10% 12%);
+      --code-fg: hsl(210 10% 92%);
+      --sidebar-bg: hsla(0 0% 100% / 0.85);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    /* ========== 布局 ========== */
+    .app { display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px; margin-bottom: 24px;
+      border-radius: var(--radius-sm);
+      text-decoration: none; color: var(--text);
+    }
+    .sidebar-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--primary); color: var(--primary-fg);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .sidebar-logo-text h3 { font-size: 14px; font-weight: 600; }
+    .sidebar-logo-text p { font-size: 11px; color: var(--text-muted); }
+    
+    .nav-group { margin-bottom: 8px; }
+    .nav-group-title {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted);
+      padding: 8px 12px; margin-top: 8px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius-sm);
+      text-decoration: none; color: var(--text);
+      font-size: 14px; font-weight: 500;
+      transition: all 0.15s ease;
+    }
+    .nav-item:hover { background: var(--accent); color: var(--accent-fg); }
+    .nav-item.active { background: var(--primary); color: var(--primary-fg); }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* 主内容区 */
+    .main {
+      flex: 1; margin-left: 260px;
+      padding: 40px 48px;
+      max-width: 960px;
+    }
+
+    /* ========== 通用组件 ========== */
+    section { margin-bottom: 48px; }
+    h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+    h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin-top: 40px; margin-bottom: 16px; }
+    h3 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; }
+    p { color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+    
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--text-muted);
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+
+    /* 卡片 */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color 0.2s ease;
+    }
+    .card:hover { border-color: hsl(211 90% 48% / 0.3); }
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .card-link { text-decoration: none; color: inherit; display: block; }
+    .card-header { display: flex; align-items: flex-start; gap: 16px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      background: var(--accent); color: var(--accent-fg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-icon svg { width: 22px; height: 22px; }
+    .card-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* 代码块 */
+    .code-block {
+      background: var(--code-bg); border-radius: var(--radius);
+      overflow: hidden; margin: 16px 0;
+    }
+    .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px; background: hsl(210 10% 16%);
+      border-bottom: 1px solid hsl(210 10% 20%);
+    }
+    .code-lang { font-size: 12px; color: hsl(210 10% 60%); }
+    .copy-btn {
+      background: none; border: none; color: hsl(210 10% 60%);
+      cursor: pointer; font-size: 12px; padding: 4px 8px;
+      border-radius: 4px; transition: all 0.15s;
+    }
+    .copy-btn:hover { background: hsl(210 10% 24%); color: hsl(210 10% 90%); }
+    .code-body {
+      padding: 16px; overflow-x: auto;
+      font-family: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+      font-size: 13px; line-height: 1.6; color: var(--code-fg);
+    }
+    .code-body .comment { color: hsl(210 10% 45%); }
+    .code-body .keyword { color: hsl(211 90% 70%); }
+    .code-body .string { color: hsl(46 100% 60%); }
+    .code-body .func { color: hsl(174 77% 60%); }
+
+    /* 按钮 */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      text-decoration: none; transition: all 0.15s ease;
+      border: none;
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-fg); }
+    .btn-primary:hover { background: hsl(211 90% 44%); }
+    .btn-outline {
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+    .btn-ghost { background: none; color: var(--primary); padding: 8px 12px; }
+    .btn-ghost:hover { background: var(--accent); }
+
+    /* 标签页 */
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .tab {
+      padding: 12px 20px; font-size: 14px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer; border: none; background: none;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 时间轴 */
+    .timeline { position: relative; padding-left: 32px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 32px; }
+    .timeline-dot {
+      position: absolute; left: -32px; top: 4px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--card); border: 2px solid var(--primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .timeline-dot-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+    .timeline-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .timeline-desc { font-size: 14px; color: var(--text-muted); }
+    .timeline-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 500; margin-top: 8px;
+    }
+    .tag-agent { background: var(--accent); color: var(--accent-fg); }
+    .tag-decision { background: hsl(26 90% 96%); color: hsl(26 90% 49%); }
+
+    /* FAQ 折叠面板 */
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-question {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 0; background: none; border: none; cursor: pointer;
+      font-size: 15px; font-weight: 500; color: var(--text); text-align: left;
+    }
+    .faq-question:hover { color: var(--primary); }
+    .faq-icon { transition: transform 0.2s; }
+    .faq-item.open .faq-icon { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 500px; }
+    .faq-answer-inner { padding-bottom: 16px; font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* 筛选标签 */
+    .filter-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .filter-tag {
+      padding: 6px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text-muted); transition: all 0.15s;
+    }
+    .filter-tag:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-tag.active { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+
+    /* 更新日志 */
+    .log-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .log-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; min-width: 80px; }
+    .log-content { font-size: 14px; color: var(--text); }
+    .log-version {
+      display: inline-block; padding: 2px 6px; border-radius: 4px;
+      font-size: 11px; background: var(--accent); color: var(--accent-fg); margin-left: 8px;
+    }
+
+    /* Hero 区域 */
+    .hero {
+      position: relative; overflow: hidden;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: linear-gradient(to bottom, var(--accent), var(--card));
+      padding: 56px 48px; text-align: center;
+    }
+    .hero h1 { font-size: 40px; margin-bottom: 16px; }
+    .hero p { font-size: 18px; max-width: 600px; margin: 0 auto 32px; }
+    .hero-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 640px; margin: 0 auto; }
+    .hero-link {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 20px 12px; border-radius: var(--radius);
+      background: var(--card); border: 1px solid var(--border);
+      text-decoration: none; color: var(--text);
+      transition: all 0.2s;
+    }
+    .hero-link:hover { border-color: var(--primary); background: var(--accent); }
+    .hero-link svg { width: 24px; height: 24px; color: var(--primary); }
+    .hero-link span { font-size: 14px; font-weight: 500; }
+    .hero-link small { font-size: 12px; color: var(--text-muted); }
+
+    /* 架构图 SVG */
+    .arch-diagram {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px; margin: 24px 0;
+    }
+    .arch-diagram svg { width: 100%; height: auto; }
+
+    /* 资源卡片 */
+    .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .resource-card {
+      padding: 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--card);
+      text-align: center;
+    }
+    .resource-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .resource-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 24px 16px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .hero-links { grid-template-columns: repeat(2, 1fr); }
+      .resource-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+      .hero { padding: 32px 24px; }
+      .hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- ========== 左侧导航 ========== -->
+    <aside class="sidebar">
+      <a href="#home" class="sidebar-logo">
+        <div class="sidebar-logo-icon">⚡</div>
+        <div class="sidebar-logo-text">
+          <h3>AI 一人公司</h3>
+          <p>技术支持中心</p>
+        </div>
+      </a>
+      
+      <div class="nav-group">
+        <div class="nav-group-title">导航</div>
+        <nav>
+          <a href="#home" class="nav-item active" onclick="setActive(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            首页
+          </a>
+          <a href="#quick-start" class="nav-item" onclick="setActive(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            快速开始
+          </a>
+          <a href="#agents" class="nav-item" onclick="setActive(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Agent指南
+          </a>
+          <a href="#cases" class="nav-item" onclick="setActive(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 3v18m0 0H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+            案例与试验
+          </a>
+          <a href="#framework" class="nav-item" onclick="setActive(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            框架与模板
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main">
+      
+      <!-- ===== 首页 ===== -->
+      <section id="home">
+        <div class="hero">
+          <div class="badge" style="margin-bottom: 24px;">
+            <span class="badge-dot"></span>
+            技术支持与培训中心
+          </div>
+          <h1>AI 一人公司</h1>
+          <p>以 AI 辅助一人公司创业，通过 IT、运营、财务、行政四大数字员工，让项目管理和创业流程更简单、更高效。</p>
+          <div class="hero-links">
+            <a href="#quick-start" class="hero-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <span>快速开始</span>
+              <small>5 分钟上手</small>
+            </a>
+            <a href="#agents" class="hero-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span>Agent指南</span>
+              <small>四大数字员工</small>
+            </a>
+            <a href="#cases" class="hero-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18"/></svg>
+              <span>案例与试验</span>
+              <small>真实场景复盘</small>
+            </a>
+            <a href="#framework" class="hero-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span>框架与模板</span>
+              <small>OpenClaw + Copaw</small>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 核心模块卡片 -->
+      <section>
+        <h2>核心模块</h2>
+        <div class="card-grid">
+          <a href="#quick-start" class="card-link">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div>
+                  <div class="card-title">快速开始</div>
+                  <div class="card-desc">5 分钟完成环境配置，跑通第一个 Agent 任务</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="#agents" class="card-link">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                  <div class="card-title">四大数字员工</div>
+                  <div class="card-desc">IT、运营、财务、行政 Agent 的职责边界与配置指南</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="#cases" class="card-link">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18"/></svg>
+                </div>
+                <div>
+                  <div class="card-title">实战案例</div>
+                  <div class="card-desc">真实场景复盘与试验数据，可复用的操作路径</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="#framework" class="card-link">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div>
+                  <div class="card-title">底层框架</div>
+                  <div class="card-desc">OpenClaw 架构解析与 Copaw 模板二次开发指南</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- 更新日志 -->
+      <section>
+        <h2>内容更新日志</h2>
+        <div class="card">
+          <div class="log-item">
+            <span class="log-date">2026-05-20</span>
+            <span class="log-content">新增「财务 Agent」成本核算案例 <span class="log-version">v1.2.0</span></span>
+          </div>
+          <div class="log-item">
+            <span class="log-date">2026-05-15</span>
+            <span class="log-content">更新 OpenClaw 框架集成指南，补充多 Agent 并发调度说明 <span class="log-version">v1.1.0</span></span>
+          </div>
+          <div class="log-item">
+            <span class="log-date">2026-05-10</span>
+            <span class="log-content">初始版本发布，包含四大 Agent 基础指南与快速开始 <span class="log-version">v1.0.0</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 快速开始 ===== -->
+      <section id="quick-start">
+        <h1>快速开始</h1>
+        <p>5 分钟完成环境配置，跑通第一个 Agent 任务。按以下步骤依次操作即可。</p>
+
+        <h2>1. 环境准备清单</h2>
+        <div class="card">
+          <h3>系统要求</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 2;">
+            <li>Node.js >= 18.0</li>
+            <li>npm >= 9.0 或 pnpm >= 8.0</li>
+            <li>Git >= 2.30</li>
+          </ul>
+          
+          <h3>API Key 配置</h3>
+          <p>在项目根目录创建 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">.env</code> 文件：</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">.env</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+<span class="comment"># OpenAI API 配置</span>
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_MODEL=gpt-4o
+
+<span class="comment"># 可选：其他 LLM 配置</span>
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxx
+            </div>
+          </div>
+        </div>
+
+        <h2>2. 初始化向导</h2>
+        <div class="card">
+          <h3>克隆项目</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+<span class="func">git</span> clone https://github.com/your-org/ai-one-person-company.git
+<span class="func">cd</span> ai-one-person-company
+<span class="func">npm</span> install
+            </div>
+          </div>
+
+          <h3>配置文件修改</h3>
+          <p>编辑 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">config.json</code>，设置你的 Agent 参数：</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">json</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+{
+  <span class="string">"agents"</span>: [
+    { <span class="string">"name"</span>: <span class="string">"IT"</span>, <span class="string">"temperature"</span>: 0.7 },
+    { <span class="string">"name"</span>: <span class="string">"运营"</span>, <span class="string">"temperature"</span>: 0.8 },
+    { <span class="string">"name"</span>: <span class="string">"财务"</span>, <span class="string">"temperature"</span>: 0.3 },
+    { <span class="string">"name"</span>: <span class="string">"行政"</span>, <span class="string">"temperature"</span>: 0.5 }
+  ]
+}
+            </div>
+          </div>
+
+          <h3>启动服务</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+<span class="func">npm</span> run dev
+            </div>
+          </div>
+        </div>
+
+        <h2>3. 首次运行验证</h2>
+        <div class="card">
+          <h3>预期输出</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">terminal</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+<span class="comment">✓ 环境检查通过</span>
+<span class="comment">✓ API Key 验证成功</span>
+<span class="comment">✓ Agent 面板已启动: http://localhost:3000</span>
+<span class="comment">✓ 加载 4 个数字员工: IT, 运营, 财务, 行政</span>
+            </div>
+          </div>
+
+          <h3>常见问题排查</h3>
+          <div style="margin-top: 16px;">
+            <div class="faq-item open">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                API Key 无效怎么办？
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  检查 .env 文件中 OPENAI_API_KEY 是否正确复制，确保没有多余空格。可以访问 OpenAI 控制台验证 Key 是否有效。
+                </div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                端口 3000 被占用？
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  修改 config.json 中的 port 字段，或运行 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">lsof -i :3000</code> 查看占用进程并关闭。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Agent指南 ===== -->
+      <section id="agents">
+        <h1>Agent指南</h1>
+        <p>详细了解 IT、运营、财务、行政四大数字员工的职责、配置与交互方式。</p>
+
+        <h2>角色切换面板</h2>
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab(this, 'it')">IT 员工</button>
+          <button class="tab" onclick="switchTab(this, 'ops')">运营员工</button>
+          <button class="tab" onclick="switchTab(this, 'finance')">财务员工</button>
+          <button class="tab" onclick="switchTab(this, 'admin')">行政员工</button>
+        </div>
+
+        <div id="tab-it" class="tab-content active">
+          <div class="card">
+            <h3>IT 数字员工</h3>
+            <p><strong>职责范围：</strong>网站搭建与维护、服务器配置、域名管理、技术选型、代码审查、自动化部署。</p>
+            <p><strong>适用场景：</strong>需要快速搭建产品官网、配置 CI/CD 流程、解决技术债务、选择技术栈。</p>
+            
+            <h3>系统提示词示例</h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">prompt</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              </div>
+              <div class="code-body">
+你是一名资深全栈工程师，专注于为一人公司提供技术支持。
+你的职责包括：
+1. 网站搭建与维护（前端 + 后端）
+2. 服务器配置与域名管理
+3. 技术选型与架构设计
+4. 代码审查与性能优化
+
+请用简洁、可执行的步骤回答问题，避免过度解释。
+              </div>
+            </div>
+
+            <h3>参数调节建议</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border); text-align: left;">
+                  <th style="padding: 8px; color: var(--text-muted);">参数</th>
+                  <th style="padding: 8px; color: var(--text-muted);">推荐值</th>
+                  <th style="padding: 8px; color: var(--text-muted);">说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <td style="padding: 8px;">temperature</td>
+                  <td style="padding: 8px;">0.3 - 0.5</td>
+                  <td style="padding: 8px;">IT 任务需要确定性输出，低温更稳定</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <td style="padding: 8px;">max_tokens</td>
+                  <td style="padding: 8px;">4096</td>
+                  <td style="padding: 8px;">代码生成需要较长上下文</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px;">context_window</td>
+                  <td style="padding: 8px;">8192+</td>
+                  <td style="padding: 8px;">保持项目上下文连贯性</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-ops" class="tab-content">
+          <div class="card">
+            <h3>运营数字员工</h3>
+            <p><strong>职责范围：</strong>内容创作、社交媒体运营、用户增长策略、数据分析、SEO 优化、营销活动策划。</p>
+            <p><strong>适用场景：</strong>撰写公众号文章、制定社交媒体排期、分析用户行为数据、策划营销活动。</p>
+            
+            <h3>系统提示词示例</h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">prompt</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              </div>
+              <div class="code-body">
+你是一名资深运营专家，擅长内容营销与用户增长。
+你的职责包括：
+1. 内容创作与排期管理
+2. 社交媒体运营策略
+3. 用户增长与留存分析
+4. SEO 优化与关键词策略
+
+请提供可执行的运营方案，包含具体时间节点与预期指标。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-finance" class="tab-content">
+          <div class="card">
+            <h3>财务数字员工</h3>
+            <p><strong>职责范围：</strong>成本核算、财务报表生成、税务规划建议、现金流管理、预算制定、ROI 分析。</p>
+            <p><strong>适用场景：</strong>月度成本分析、生成利润表、制定年度预算、评估项目 ROI。</p>
+            
+            <h3>系统提示词示例</h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">prompt</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              </div>
+              <div class="code-body">
+你是一名专业财务顾问，专注于一人公司的财务管理。
+你的职责包括：
+1. 成本核算与分类
+2. 财务报表生成（利润表、资产负债表）
+3. 税务规划与合规建议
+4. 现金流管理与预算制定
+
+请确保数据准确，提供清晰的表格与可视化建议。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-admin" class="tab-content">
+          <div class="card">
+            <h3>行政数字员工</h3>
+            <p><strong>职责范围：</strong>日程管理、合同起草、会议记录、文档归档、流程标准化、合规检查。</p>
+            <p><strong>适用场景：</strong>安排会议日程、起草服务合同、整理项目文档、检查合规要求。</p>
+            
+            <h3>系统提示词示例</h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">prompt</span>
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+              </div>
+              <div class="code-body">
+你是一名高效行政助理，专注于一人公司的日常运营管理。
+你的职责包括：
+1. 日程管理与会议安排
+2. 合同起草与模板管理
+3. 会议记录与行动项跟踪
+4. 文档归档与流程标准化
+
+请保持输出结构化，便于直接复制使用。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>交互演示占位区</h2>
+        <div class="card" style="text-align: center; padding: 48px;">
+          <div style="width: 64px; height: 64px; margin: 0 auto 16px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-fg);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 style="margin-bottom: 8px;">对话流演示区域</h3>
+          <p style="max-width: 400px; margin: 0 auto;">此处预留典型任务的输入输出展示，如"IT 部署网站"、"财务生成报表"等。后续可填充真实对话记录。</p>
+        </div>
+      </section>
+
+      <!-- ===== 案例与试验 ===== -->
+      <section id="cases">
+        <h1>案例与试验</h1>
+        <p>通过真实场景复盘与试验数据，验证工具价值并提供可复用的操作路径。</p>
+
+        <h2>案例筛选</h2>
+        <div class="filter-tags">
+          <button class="filter-tag active" onclick="filterCases(this, 'all')">全部</button>
+          <button class="filter-tag" onclick="filterCases(this, 'website')">独立站搭建</button>
+          <button class="filter-tag" onclick="filterCases(this, 'social')">自媒体运营</button>
+          <button class="filter-tag" onclick="filterCases(this, 'finance')">成本核算</button>
+          <button class="filter-tag" onclick="filterCases(this, 'admin')">流程标准化</button>
+        </div>
+
+        <h2>案例时间线：独立站搭建全流程</h2>
+        <div class="card">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+              <div class="timeline-title">需求分析与技术选型</div>
+              <div class="timeline-desc">IT Agent 分析业务需求，推荐 Next.js + Tailwind 技术栈，预估开发周期 3 天。</div>
+              <span class="timeline-tag tag-agent">IT Agent 介入</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+              <div class="timeline-title">网站架构搭建</div>
+              <div class="timeline-desc">IT Agent 生成项目骨架，配置路由、组件库与部署脚本，完成基础框架。</div>
+              <span class="timeline-tag tag-agent">IT Agent 介入</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+              <div class="timeline-title">内容创作与 SEO 配置</div>
+              <div class="timeline-desc">运营 Agent 撰写首页文案，配置 meta 标签与 sitemap，优化搜索引擎收录。</div>
+              <span class="timeline-tag tag-agent">运营 Agent 介入</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+              <div class="timeline-title">成本核算与预算审批</div>
+              <div class="timeline-desc">财务 Agent 核算域名、服务器、API 调用成本，生成月度预算表。</div>
+              <span class="timeline-tag tag-agent">财务 Agent 介入</span>
+              <span class="timeline-tag tag-decision">关键决策点</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+              <div class="timeline-title">上线部署与文档归档</div>
+              <div class="timeline-desc">IT Agent 执行 CI/CD 部署，行政 Agent 整理项目文档并归档，完成交付。</div>
+              <span class="timeline-tag tag-agent">IT + 行政 Agent 协作</span>
+            </div>
+          </div>
+        </div>
+
+        <h2>资源一键获取</h2>
+        <div class="resource-grid">
+          <div class="resource-card">
+            <h4>Prompt 模板包</h4>
+            <p>四大 Agent 完整系统提示词与参数配置</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('请自行配置 Prompt 模板')">下载模板</button>
+          </div>
+          <div class="resource-card">
+            <h4>配置文件示例</h4>
+            <p>config.json 完整配置参考</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="copyConfig()">复制配置</button>
+          </div>
+          <div class="resource-card">
+            <h4>数据样本</h4>
+            <p>案例使用的测试数据集</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="alert('请自行准备测试数据')">下载样本</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px; text-align: center;">
+          <h3 style="margin-bottom: 8px;">分享你的试验结果</h3>
+          <p style="margin-bottom: 16px;">欢迎提交你的实战案例与改进建议，帮助社区共同成长。</p>
+          <button class="btn btn-primary">提交试验反馈</button>
+        </div>
+      </section>
+
+      <!-- ===== 框架与模板 ===== -->
+      <section id="framework">
+        <h1>框架与模板</h1>
+        <p>解析 OpenClaw 框架与阿里 Copaw 模板的技术原理，支持高级用户二次开发。</p>
+
+        <h2>架构拓扑</h2>
+        <div class="arch-diagram">
+          <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- 背景网格 -->
+            <defs>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(210 10% 94%)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="800" height="320" fill="url(#grid)"/>
+            
+            <!-- 用户层 -->
+            <rect x="300" y="20" width="200" height="50" rx="8" fill="hsl(211 90% 48%)" />
+            <text x="400" y="50" text-anchor="middle" fill="white" font-size="14" font-weight="500">用户请求</text>
+            
+            <!-- 箭头 1 -->
+            <line x1="400" y1="70" x2="400" y2="100" stroke="hsl(210 10% 70%)" stroke-width="2" marker-end="url(#arrow)"/>
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="hsl(210 10% 70%)"/></marker></defs>
+            
+            <!-- OpenClaw 框架层 -->
+            <rect x="250" y="100" width="300" height="60" rx="8" fill="hsl(210 10% 92%)" stroke="hsl(210 10% 80%)" stroke-width="1"/>
+            <text x="400" y="135" text-anchor="middle" fill="hsl(210 10% 30%)" font-size="14" font-weight="600">OpenClaw 框架</text>
+            
+            <!-- Agent 层 -->
+            <rect x="50" y="190" width="150" height="50" rx="8" fill="hsl(211 90% 96%)" stroke="hsl(211 90% 70%)" stroke-width="1"/>
+            <text x="125" y="220" text-anchor="middle" fill="hsl(211 90% 48%)" font-size="13" font-weight="500">IT Agent</text>
+            
+            <rect x="225" y="190" width="150" height="50" rx="8" fill="hsl(211 90% 96%)" stroke="hsl(211 90% 70%)" stroke-width="1"/>
+            <text x="300" y="220" text-anchor="middle" fill="hsl(211 90% 48%)" font-size="13" font-weight="500">运营 Agent</text>
+            
+            <rect x="400" y="190" width="150" height="50" rx="8" fill="hsl(211 90% 96%)" stroke="hsl(211 90% 70%)" stroke-width="1"/>
+            <text x="475" y="220" text-anchor="middle" fill="hsl(211 90% 48%)" font-size="13" font-weight="500">财务 Agent</text>
+            
+            <rect x="575" y="190" width="150" height="50" rx="8" fill="hsl(211 90% 96%)" stroke="hsl(211 90% 70%)" stroke-width="1"/>
+            <text x="650" y="220" text-anchor="middle" fill="hsl(211 90% 48%)" font-size="13" font-weight="500">行政 Agent</text>
+            
+            <!-- 箭头 2 -->
+            <line x1="350" y1="160" x2="125" y2="190" stroke="hsl(210 10% 70%)" stroke-width="1.5" stroke-dasharray="4"/>
+            <line x1="375" y1="160" x2="300" y2="190" stroke="hsl(210 10% 70%)" stroke-width="1.5" stroke-dasharray="4"/>
+            <line x1="425" y1="160" x2="475" y2="190" stroke="hsl(210 10% 70%)" stroke-width="1.5" stroke-dasharray="4"/>
+            <line x1="450" y1="160" x2="650" y2="190" stroke="hsl(210 10% 70%)" stroke-width="1.5" stroke-dasharray="4"/>
+            
+            <!-- Copaw 模板层 -->
+            <rect x="200" y="270" width="400" height="40" rx="8" fill="hsl(26 90% 96%)" stroke="hsl(26 90% 70%)" stroke-width="1"/>
+            <text x="400" y="295" text-anchor="middle" fill="hsl(26 90% 49%)" font-size="13" font-weight="500">Copaw 模板加载器</text>
+            
+            <!-- 箭头 3 -->
+            <line x1="400" y1="240" x2="400" y2="270" stroke="hsl(210 10% 70%)" stroke-width="2" marker-end="url(#arrow)"/>
+          </svg>
+        </div>
+
+        <h2>Copaw 模板扩展指南</h2>
+        <div class="card">
+          <h3>目录结构</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">text</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+copaw-template/
+├── agents/                 # Agent 定义目录
+│   ├── it-agent.json       # IT Agent 配置
+│   ├── ops-agent.json      # 运营 Agent 配置
+│   ├── finance-agent.json  # 财务 Agent 配置
+│   └── admin-agent.json    # 行政 Agent 配置
+├── hooks/                  # 扩展钩子
+│   ├── before-task.js      # 任务执行前钩子
+│   └── after-task.js       # 任务完成后钩子
+├── plugins/                # 自定义插件
+│   └── custom-plugin.js    # 示例插件
+├── config.json             # 全局配置
+└── README.md               # 模板说明
+            </div>
+          </div>
+
+          <h3>扩展钩子位置</h3>
+          <p>在 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">hooks/</code> 目录下创建自定义钩子：</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">javascript</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+<span class="comment">// hooks/before-task.js</span>
+<span class="keyword">export default</span> <span class="keyword">async function</span> <span class="func">beforeTask</span>(context) {
+  <span class="comment">// 任务执行前的自定义逻辑</span>
+  console.<span class="func">log</span>(<span class="string">`准备执行任务: ${context.taskName}`</span>);
+  
+  <span class="comment">// 可修改上下文参数</span>
+  context.params.retries = 3;
+  
+  <span class="keyword">return</span> context;
+}
+            </div>
+          </div>
+
+          <h3>自定义插件接入</h3>
+          <p>在 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">plugins/</code> 目录下创建插件，并在 config.json 中注册：</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">json</span>
+              <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            </div>
+            <div class="code-body">
+{
+  <span class="string">"plugins"</span>: [
+    {
+      <span class="string">"name"</span>: <span class="string">"custom-plugin"</span>,
+      <span class="string">"path"</span>: <span class="string">"./plugins/custom-plugin.js"</span>,
+      <span class="string">"enabled"</span>: <span class="keyword">true</span>
+    }
+  ]
+}
+            </div>
+          </div>
+        </div>
+
+        <h2>开发者 FAQ</h2>
+        <div class="card">
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              如何将自定义 Agent 接入 OpenClaw 框架？
+              <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                在 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">agents/</code> 目录下创建新的 JSON 配置文件，定义 Agent 名称、系统提示词、参数配置。然后在 config.json 的 agents 数组中添加引用即可。框架会自动加载并注册新 Agent。
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              多 Agent 并发调度如何实现？
+              <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                OpenClaw 框架内置任务队列，支持并行执行多个 Agent 任务。通过 config.json 中的 <code style="background: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px;">concurrency</code> 参数控制并发数量。注意 API 调用频率限制，建议设置合理的并发上限。
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              如何优化 Agent 响应性能？
+              <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                1. 降低 temperature 参数提升响应速度；2. 使用流式输出（streaming）减少等待时间；3. 优化系统提示词，减少冗余指令；4. 合理设置 max_tokens 避免过长响应。
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              Copaw 模板是否支持热更新？
+              <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                支持。修改 agents/ 或 hooks/ 目录下的文件后，框架会自动检测文件变更并重新加载。无需重启服务，但正在执行的任务不会中断。
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 页脚 -->
+      <footer style="margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 13px;">
+        <p>AI 一人公司 · 技术支持与培训中心</p>
+        <p style="margin-top: 4px;">基于 OpenClaw 框架与 Copaw 模板构建</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // 导航高亮
+    function setActive(el) {
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // 滚动时自动高亮当前章节
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (window.pageYOffset >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === '#' + current) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // 标签页切换
+    function switchTab(btn, tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    // FAQ 折叠面板
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // 案例筛选
+    function filterCases(btn, category) {
+      document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      // 实际筛选逻辑可根据需要扩展
+    }
+
+    // 代码复制
+    function copyCode(btn) {
+      const codeBlock = btn.closest('.code-block');
+      const code = codeBlock.querySelector('.code-body').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '已复制 ✓';
+        setTimeout(() => { btn.textContent = '复制'; }, 2000);
+      });
+    }
+
+    // 复制配置
+    function copyConfig() {
+      const config = JSON.stringify({
+        agents: [
+          { name: "IT", temperature: 0.5 },
+          { name: "运营", temperature: 0.8 },
+          { name: "财务", temperature: 0.3 },
+          { name: "行政", temperature: 0.5 }
+        ],
+        port: 3000
+      }, null, 2);
+      navigator.clipboard.writeText(config).then(() => {
+        alert('配置已复制到剪贴板');
+      });
+    }
+  </script>
+</body>
+</html>
